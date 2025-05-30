@@ -52,14 +52,18 @@
             align-items: center;
             background-color: #d2b48c; /* Light wooden background */
         }
+        
         #gameContainer {
             text-align: center;
-            background: url('https://www.transparenttextures.com/patterns/wood-pattern.png'); /* Wooden texture */
+            background: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
             padding: 20px;
-            border: 5px solid #8b4513; /* Dark wood border */
+            border: 5px solid #8b4513;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            max-width: 350px;
+            margin: auto;
         }
+        
         h1 {
             margin: 0;
             font-size: 36px;
@@ -70,9 +74,11 @@
             grid-template-columns: repeat(3, 100px);
             grid-gap: 5px;
             margin: 20px auto;
-            background: #000; /* Black grid lines */
+            background: #000;
             padding: 5px;
+            width: 310px;
         }
+
         .cell {
             width: 100px;
             height: 100px;
@@ -118,14 +124,19 @@
             color: #000;
         }
         #playerInput {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
         #playerInput input {
-            padding: 5px;
+            padding: 8px;
             font-size: 16px;
+            width: 120px;
         }
         #playerInput button {
-            padding: 5px 10px;
+            padding: 8px 12px;
             font-size: 16px;
             cursor: pointer;
             background-color: #4CAF50;
@@ -153,9 +164,31 @@
         #resetButton:hover {
             background-color: #cc0000;
         }
-    </style>
+    
+        #boardOverlay {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 16px;
+            color: #fff;
+            background-color: #000;
+            padding: 10px;
+            border-radius: 8px;
+            width: 310px;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+</style>
 </head>
 <body>
+<audio id="backgroundMusic" autoplay loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-sunny.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+<button onclick="toggleMusic()" style="margin-top: 10px;">🔊 Toggle Music</button>
+
+<audio id="moveSound" src="https://www.soundjay.com/button/sounds/button-29.mp3"></audio>
+<audio id="winSound" src="https://www.soundjay.com/button/sounds/button-3.mp3"></audio>
+
     <div id="gameContainer">
         <h1>TIC - TAC - TOE</h1>
         <div id="playerInput">
@@ -165,6 +198,8 @@
         </div>
         <div id="status">Active Player: <span id="activePlayer">Player1 (X)</span></div>
         <div id="board"></div>
+<div id="boardOverlay">Why did the X break up with the O? Because it felt crossed! 😆</div>
+
         <div id="score">Score: <span id="score1">0</span> - <span id="score2">0</span></div>
         <button id="resetButton">RESET</button>
     </div>
@@ -185,7 +220,17 @@
         let player2Score = 0;
 
         // Initialize the game board
-        function createBoard() {
+        
+const music = document.getElementById('backgroundMusic');
+function toggleMusic() {
+    if (music.paused) {
+        music.play();
+    } else {
+        music.pause();
+    }
+}
+
+function createBoard() {
             board.innerHTML = '';
             for (let i = 0; i < 9; i++) {
                 const cell = document.createElement('div');
@@ -214,11 +259,14 @@
 
                 // Place the player's symbol after animation
                 setTimeout(() => {
+                    document.getElementById("moveSound").play();
                     currentBoard[index] = currentPlayer;
                     event.target.textContent = currentPlayer;
                     event.target.classList.add(currentPlayer === 'X' ? 'player1' : 'player2');
                     const winCondition = checkWin();
                     if (winCondition) {
+                        document.getElementById("winSound").play();
+                        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
                         status.textContent = `Active Player: ${currentPlayer === 'X' ? player1Name : player2Name} Wins!`;
                         gameActive = false;
                         winCondition.forEach(index => {

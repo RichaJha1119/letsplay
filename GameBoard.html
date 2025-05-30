@@ -1,0 +1,171 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Game Board</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background: url('eceeb3b6-0de8-4946-b128-ccb38f44d1bd.png') center center no-repeat;
+      background-size: cover;
+      color: white;
+    }
+    #mainContainer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100%;
+    }
+    h1 {
+      margin: 20px 0 10px;
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 10px 20px;
+      border-radius: 10px;
+      text-align: center;
+      width: 90%;
+    }
+    .game-cards {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+      padding: 10px;
+    }
+    .card {
+      background-color: rgba(0, 0, 0, 0.6);
+      border: 2px solid white;
+      border-radius: 10px;
+      overflow: hidden;
+      text-align: center;
+      width: 90%;
+      max-width: 300px;
+      margin-bottom: 20px;
+    }
+    .card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+    .card h2 {
+      margin: 10px 0;
+      font-size: 20px;
+    }
+    .card button {
+      margin: 10px 0 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #28a745;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .card button:hover {
+      background-color: #218838;
+    }
+    #gameContainer {
+      display: none;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    #backButton {
+      display: none;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    #backButton:hover {
+      background-color: #b02a37;
+    }
+  </style>
+</head>
+<body>
+  <div id="mainContainer">
+    <h1>🎮 Choose a Game to Play</h1>
+    <div class="game-cards" id="gameCards">
+      <div class="card">
+        <img src="caccac9b-482e-46c0-9e1d-d8d8339b6d61.png" alt="Tic Tac Toe" />
+        <h2>Tic Tac Toe</h2>
+        <button onclick="loadGame('tictactoe')">Play Now</button>
+      </div>
+      <div class="card">
+        <img src="eee4a38f-5c52-489f-bc22-1c5aaaedca7a.png" alt="Space Invaders" />
+        <h2>Space Invaders</h2>
+        <button onclick="loadGame('spaceinvaders')">Play Now</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="gameContainer">
+    <button id="backButton" onclick="goBack()">⏪ Back to Menu</button>
+    <iframe id="gameFrame" src=""></iframe>
+  </div>
+
+  <script>
+    let music = null;
+
+    function loadGame(game) {
+      document.getElementById("gameContainer").style.display = "block";
+      document.getElementById("mainContainer").style.display = "none";
+      document.getElementById("backButton").style.display = "inline-block";
+
+      const frame = document.getElementById("gameFrame");
+      if (music) {
+        music.pause();
+        music.currentTime = 0;
+      }
+
+      if (game === "tictactoe") {
+        music = new Audio("https://www.bensound.com/bensound-music/bensound-sunny.mp3");
+        frame.src = "TicTacToe_Interactive_Spaced.html";
+      } else if (game === "spaceinvaders") {
+        music = new Audio("https://www.bensound.com/bensound-music/bensound-scifi.mp3");
+        frame.src = "SpaceInvaders_Enhanced_WithMusicToggle.html";
+      }
+
+      music.loop = true;
+      music.volume = 0.4;
+      music.play();
+    }
+
+    function goBack() {
+      document.getElementById("gameContainer").style.display = "none";
+      document.getElementById("mainContainer").style.display = "flex";
+      document.getElementById("backButton").style.display = "none";
+      document.getElementById("gameFrame").src = "";
+      if (music) {
+        music.pause();
+        music.currentTime = 0;
+      }
+    }
+  </script>
+</body>
+</html>
